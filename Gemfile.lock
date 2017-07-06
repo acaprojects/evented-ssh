@@ -1,0 +1,50 @@
+PATH
+  remote: .
+  specs:
+    evented-ssh (0.0.1)
+      ipaddress (~> 0.8)
+      libuv (~> 3.1)
+      net-ssh (~> 4.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    concurrent-ruby (1.0.5)
+    diff-lcs (1.3)
+    ffi (1.9.18)
+    ffi-compiler (1.0.1)
+      ffi (>= 1.0.0)
+      rake
+    ipaddress (0.8.3)
+    libuv (3.1.9)
+      concurrent-ruby (~> 1.0)
+      ffi (~> 1.9)
+      ruby-tls (~> 2.1)
+    net-ssh (4.1.0)
+    rake (12.0.0)
+    rspec (3.6.0)
+      rspec-core (~> 3.6.0)
+      rspec-expectations (~> 3.6.0)
+      rspec-mocks (~> 3.6.0)
+    rspec-core (3.6.0)
+      rspec-support (~> 3.6.0)
+    rspec-expectations (3.6.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.6.0)
+    rspec-mocks (3.6.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.6.0)
+    rspec-support (3.6.0)
+    ruby-tls (2.3.0)
+      concurrent-ruby (~> 1.0)
+      ffi-compiler (>= 1.0, < 2.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  evented-ssh!
+  rspec
+
+BUNDLED WITH
+   1.15.1
