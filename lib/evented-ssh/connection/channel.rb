@@ -16,6 +16,13 @@ module Net; module SSH; module Connection
             @defer.promise.value
         end
 
+        # Allow direct access to the promise.
+        # Means we can do parallel tasks and then grab
+        # the results of multiple executions.
+        def promise
+            @defer.promise
+        end
+
         alias_method :original_do_close, :do_close
         def do_close
             # Resolve the promise and anything waiting

@@ -11,7 +11,7 @@ module Net; module SSH; module Connection
             # Replacing the IO select calls
             # Next tick so we don't block the current fiber
             transport.reactor.next_tick {
-                loop
+                loop { true }
             }
         end
 
@@ -28,6 +28,22 @@ module Net; module SSH; module Connection
                 raise unless channels.empty?
             end
             transport.close
+        end
+
+        # similar to exec! however it returns a promise instead of
+        # blocking the flow of execution.
+        def p_exec!(command, status: nil)
+            status ||= {}
+            channel = exec(command, status: status) do |ch, type, data|
+                ch[:result] ||= String.new
+                ch[:result] << data
+            end
+            channel.promise.then do
+                channel[:result] ||= ""
+                channel[:result] &&= channel[:result].force_encoding("UTF-8")
+
+                StringWithExitstatus.new(channel[:result], status[:exit_code])
+            end
         end
     end
 end; end; end

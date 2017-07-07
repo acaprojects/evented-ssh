@@ -4,6 +4,7 @@ require 'evented-ssh/transport/packet_stream'
 require 'evented-ssh/transport/algorithms'
 require 'evented-ssh/transport/session'
 
+require 'evented-ssh/connection/event_loop'
 require 'evented-ssh/connection/channel'
 require 'evented-ssh/connection/session'
 
@@ -72,6 +73,21 @@ module ESSH
     rescue => e
         transport.socket.__send__(:reject, e) if transport
         raise
+    end
+
+    # Start using a promise
+    def self.p_start(host, user = nil, **options)
+        thread = ::Libuv.reactor
+        defer = thread.defer
+        thread.next_tick do
+            begin
+                connection = start(host, user, **options)
+                defer.resolve(connection)
+            rescue Exception => e
+                defer.reject(e)
+            end
+        end
+        defer.promise
     end
 
     def self.configuration_for(host, use_ssh_config)
