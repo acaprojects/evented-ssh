@@ -7,6 +7,11 @@ module Net; module SSH; module Connection
         def initialize(connection, *args, &block)
             original_initialize(connection, *args, &block)
             @defer = connection.transport.reactor.defer
+
+            # Cleanup channel when it closes
+            @defer.promise.finally {
+                process
+            }
         end
 
         attr_reader :defer

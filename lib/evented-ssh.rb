@@ -68,7 +68,7 @@ module ESSH
             end
         else
             transport.close
-            raise AuthenticationFailed, "Authentication failed for user #{user}@#{host}"
+            raise ::Net::SSH::AuthenticationFailed, "Authentication failed for user #{user}@#{host}"
         end
     rescue => e
         transport.socket.__send__(:reject, e) if transport

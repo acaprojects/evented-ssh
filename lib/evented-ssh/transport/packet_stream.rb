@@ -307,7 +307,7 @@ module ESSH; module Transport
                     wait.reject(reject_reason)
                 end
                 @awaiting.clear
-                @algorithms.reject(reject_reason)
+                @algorithms&.reject(reject_reason)
             end
         rescue => e
             error { e }
