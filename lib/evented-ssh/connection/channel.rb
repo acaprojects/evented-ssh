@@ -34,5 +34,15 @@ module Net; module SSH; module Connection
             @defer.resolve(nil)
             original_do_close
         end
+
+        def close
+            return if @closing
+            @closing = true
+
+            # Actively attempt to close the channel
+            @connection.transport.reactor.next_tick do
+                process
+            end
+        end
     end
 end; end; end
