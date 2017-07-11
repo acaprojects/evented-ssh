@@ -35,6 +35,12 @@ module Net; module SSH; module Connection
             original_do_close
         end
 
+        alias_method :original_send_data, :send_data
+        def send_data(data)
+            original_send_data(data)
+            process
+        end
+
         def close
             return if @closing
             @closing = true
