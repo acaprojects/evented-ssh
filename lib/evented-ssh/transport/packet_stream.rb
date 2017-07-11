@@ -22,6 +22,7 @@ module ESSH; module Transport
             @pending_packets = []
             @process_pending = nil
             @awaiting = []
+            @dispatch_queue = []
             @input = ::Net::SSH::Buffer.new
 
             @session = session
@@ -149,6 +150,31 @@ module ESSH; module Transport
                 break unless waiting
                 waiting.resolve(@packets.shift)
             end
+
+            # Push packets to connection layer
+            dispatch = false
+            while !@packets.empty? && @incoming_packet do
+                @incoming_packet.call(@packets.shift)
+                dispatch = true
+            end
+
+            if dispatch
+                queue = @dispatch_queue
+                @dispatch_queue = []
+                queue.each do |defer|
+                    defer.resolve(nil)
+                end
+            end
+        end
+
+        def do_process_packet(&block)
+            @incoming_packet = block
+        end
+
+        def wait_dispatch
+            defer = @reactor.defer
+            @dispatch_queue << defer
+            defer.promise.value
         end
 
         # If the IO object requires a rekey operation (as indicated by either its

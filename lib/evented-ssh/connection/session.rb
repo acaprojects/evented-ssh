@@ -11,8 +11,27 @@ module Net; module SSH; module Connection
             # Replacing the IO select calls
             # Next tick so we don't block the current fiber
             transport.reactor.next_tick {
-                loop { true }
+                set_message_dispatcher
             }
+        end
+
+        # Dispatch messages as they come in from the transport stream
+        # We process them all in a next tick block incase they block on
+        # a coroutine. We don't want to stop processing the packets
+        def set_message_dispatcher
+            @transport.socket.do_process_packet do |packet|
+                @transport.reactor.next_tick {
+                    unless MAP.key?(packet.type)
+                        warn { "unexpected response #{packet.type} (#{packet.inspect})" }
+                    end
+                    send(MAP[packet.type], packet)
+                }
+            end
+        end
+
+        # This allows the loop function to work as expected
+        def dispatch_incoming_packets(raise_disconnect_errors: true)
+            @transport.socket.wait_dispatch
         end
 
         def close

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    evented-ssh (0.0.1)
+    evented-ssh (0.0.3)
       ipaddress (~> 0.8)
       libuv (~> 3.1)
       net-ssh (~> 4.1)
