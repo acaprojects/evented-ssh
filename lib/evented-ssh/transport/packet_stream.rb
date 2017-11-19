@@ -30,12 +30,12 @@ module ESSH; module Transport
             self.logger = options[:logger]
             super(session.reactor, **options)
 
-            progress method(:check_packet)
+            progress { |data| check_packet(data) }
         end
 
         def prepare(buff)
-            progress method(:check_packet)
-            check_packet(buff, self) unless buff.empty?
+            progress { |data| check_packet(data) }
+            check_packet(buff) unless buff.empty?
             #start_read
         end
 
@@ -182,7 +182,7 @@ module ESSH; module Transport
         private
 
 
-        def check_packet(data, _)
+        def check_packet(data)
             data.force_encoding(Encoding::BINARY)
             @input.append(data)
 
