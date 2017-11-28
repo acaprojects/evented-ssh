@@ -17,5 +17,5 @@ require 'rubygems'
 
     s.add_dependency 'net-ssh',   '~> 4.1'
     s.add_dependency 'ipaddress', '~> 0.8'
-    s.add_dependency 'libuv',     '~> 3.1'
+    s.add_dependency 'libuv',     '>= 3.2.2', '< 5'
 end
